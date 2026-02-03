@@ -1,13 +1,13 @@
 ---
-name: kairos-neo-api
-description: Integrate Kairos Neo API for AI-powered product discovery and recommendations. Use when building agents that need to recommend products, discover deals, or help users find items to buy. Triggers on tasks involving "recommend products", "find deals", "product discovery", "shopping assistant", or "integrate product API".
+name: kairos
+description: Integrate Kairos API for AI-powered product discovery and recommendations. Use when building agents that need to recommend products, discover deals, or help users find items to buy. Triggers on tasks involving "recommend products", "find deals", "product discovery", "shopping assistant", or "integrate product API".
 license: MIT
 metadata:
   author: growthylab
   version: "1.0.0"
 ---
 
-# Kairos Neo API - 智能好物发现
+# Kairos - 智能好物发现
 
 A simple smart recommendation API that helps your Agent discover the best and most affordable products for users.
 
