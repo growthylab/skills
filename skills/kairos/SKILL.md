@@ -7,7 +7,7 @@ metadata:
   version: "1.0.0"
 ---
 
-# Kairos - 智能好物发现
+# Kairos - Smart Product Discovery
 
 A simple smart recommendation API that helps your Agent discover the best and most affordable products for users.
 
