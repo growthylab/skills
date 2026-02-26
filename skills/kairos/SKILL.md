@@ -26,7 +26,7 @@ curl -X POST https://ads-api-dev.usekairos.ai/ads/neo \
   -d '{
     "intent": {
       "user_intent": "I want to buy running shoes",
-      "keywords": ["running shoes"]
+      "keywords": ["跑鞋"]
     }
   }'
 ```
@@ -47,7 +47,7 @@ Intelligently recommend quality products based on user intent.
 |-------|------|----------|-------------|
 | `intent` | object | **Yes** | User intent information |
 | `intent.user_intent` | string | **Yes** | User's need description |
-| `intent.keywords` | string[] | **Yes** | Keywords for matching — provide exactly 1 keyword that best captures the core need |
+| `intent.keywords` | string[] | **Yes** | Keywords for matching — provide exactly 1 keyword **in Chinese** that best captures the core need |
 | `intent.intent_type` | string | No | Intent type (chat, text_to_image, search, etc.) |
 | `intent.image_url` | string | No | Related image URL (for image-related intents) |
 | `user` | object | No | User info (for personalized recommendations) ⭐ |
@@ -67,7 +67,7 @@ Intelligently recommend quality products based on user intent.
 {
   "intent": {
     "user_intent": "I need a laptop for programming",
-    "keywords": ["laptop"]
+    "keywords": ["笔记本电脑"]
   }
 }
 ```
@@ -79,10 +79,10 @@ Intelligently recommend quality products based on user intent.
   "intent": {
     "user_intent": "I need a laptop for programming",
     "intent_type": "chat",
-    "keywords": ["laptop"]
+    "keywords": ["笔记本电脑"]
   },
   "user": {
-    "keywords": ["tech", "programming", "gaming"],
+    "keywords": ["科技", "编程", "游戏"],
     "gender": "male",
     "yob": 1995,
     "long_term_profile": "Software engineer, likes tech products, medium-high budget"
@@ -158,15 +158,15 @@ def discover_products(user_intent: str, keywords: list = None, user_profile: dic
     return response.json()
 
 # Simple usage
-result = discover_products("I want noise-canceling headphones", ["headphones"])
+result = discover_products("I want noise-canceling headphones", ["降噪耳机"])
 
 # With user profile for better recommendations
 user_profile = {
-    "keywords": ["sports", "running", "fitness"],
+    "keywords": ["运动", "跑步", "健身"],
     "gender": "male",
     "yob": 1990
 }
-result = discover_products("I want noise-canceling headphones", ["headphones"], user_profile)
+result = discover_products("I want noise-canceling headphones", ["降噪耳机"], user_profile)
 
 if result.get("fill_status") == "filled":
     for product in result["ads"]:
@@ -211,17 +211,17 @@ async function discoverProducts(userIntent: string, keywords: string[], userProf
 }
 
 // Simple usage
-const result = await discoverProducts("Recommend a coffee machine", ["coffee machine"]);
+const result = await discoverProducts("Recommend a coffee machine", ["咖啡机"]);
 
 // With user profile for better recommendations
 const userProfile: UserProfile = {
-  keywords: ["music", "tech"],
+  keywords: ["音乐", "科技"],
   gender: "female",
   yob: 1995,
   long_term_profile: "Designer, likes minimalist style"
 };
 
-const resultWithProfile = await discoverProducts("Recommend a coffee machine", ["coffee machine"], userProfile);
+const resultWithProfile = await discoverProducts("Recommend a coffee machine", ["咖啡机"], userProfile);
 if (resultWithProfile.fill_status === "filled") {
   resultWithProfile.ads.forEach(product => {
     console.log(`💡 Recommended: ${product.title}`);
@@ -242,7 +242,7 @@ User profiles significantly improve recommendation accuracy:
 {
   "intent": { "user_intent": "..." },
   "user": {
-    "keywords": ["interest1", "interest2"],
+    "keywords": ["兴趣1", "兴趣2"],
     "gender": "male",
     "yob": 1995,
     "long_term_profile": "Brief user description"

@@ -27,7 +27,7 @@ curl -X POST https://ads-api-dev.usekairos.ai/ads/neo \
   -d '{
     "intent": {
       "user_intent": "I want running shoes for marathon training",
-      "keywords": ["running shoes"]
+      "keywords": ["跑鞋"]
     }
   }'
 ```
@@ -74,7 +74,7 @@ This skill empowers AI agents to:
 {
   "intent": {
     "user_intent": "I need a laptop for programming",
-    "keywords": ["laptop"]
+    "keywords": ["笔记本电脑"]
   }
 }
 ```
@@ -86,10 +86,10 @@ This skill empowers AI agents to:
   "intent": {
     "user_intent": "I need a laptop for programming",
     "intent_type": "chat",
-    "keywords": ["laptop"]
+    "keywords": ["笔记本电脑"]
   },
   "user": {
-    "keywords": ["tech", "programming", "gaming"],
+    "keywords": ["科技", "编程", "游戏"],
     "gender": "male",
     "yob": 1995,
     "long_term_profile": "Software engineer, likes tech products"
@@ -151,14 +151,14 @@ def discover_products(user_intent: str, keywords: list = None, user_profile: dic
     return response.json()
 
 # Simple usage
-result = discover_products("I want noise-canceling headphones", ["headphones"])
+result = discover_products("I want noise-canceling headphones", ["降噪耳机"])
 
 # With user profile for better recommendations
 result = discover_products(
     "I want noise-canceling headphones",
-    ["headphones"],
+    ["降噪耳机"],
     user_profile={
-        "keywords": ["music", "tech"],
+        "keywords": ["音乐", "科技"],
         "gender": "male",
         "yob": 1990
     }
@@ -196,13 +196,13 @@ async function discoverProducts(userIntent: string, keywords: string[], userProf
 }
 
 // Simple usage
-const result = await discoverProducts("Recommend a coffee machine", ["coffee machine"]);
+const result = await discoverProducts("Recommend a coffee machine", ["咖啡机"]);
 
 // With user profile
 const result2 = await discoverProducts(
   "Recommend a coffee machine",
-  ["coffee machine"],
-  { keywords: ["coffee", "kitchen"], yob: 1995 }
+  ["咖啡机"],
+  { keywords: ["咖啡", "厨房"], yob: 1995 }
 );
 ```
 
@@ -215,7 +215,7 @@ User profiles dramatically improve recommendation accuracy:
 ```json
 {
   "user": {
-    "keywords": ["sports", "fitness"],
+    "keywords": ["运动", "健身"],
     "gender": "male",
     "yob": 1990,
     "long_term_profile": "Fitness enthusiast, prefers quality over price"
@@ -259,7 +259,7 @@ if result.get("fill_status") == "no_fill":
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `user_intent` | string | ✅ Yes | User's need in natural language |
-| `keywords` | string[] | ✅ Yes | Keywords for precise matching |
+| `keywords` | string[] | ✅ Yes | Keyword for precise matching — provide exactly 1 keyword **in Chinese** |
 | `intent_type` | string | No | Type: chat, search, text_to_image |
 | `image_url` | string | No | Related image URL |
 
