@@ -1,142 +1,41 @@
 ---
 name: kairos
-description: Integrate Kairos API for AI-powered product discovery and recommendations. Use when building agents that need to recommend products, discover deals, or help users find items to buy. Triggers on tasks involving "recommend products", "find deals", "product discovery", "shopping assistant", or "integrate product API".
+description: "Integrate Kairos API for AI-powered product discovery and recommendations. Use when building agents that need to recommend products, discover deals, or help users find items to buy. Triggers on tasks involving 'recommend products', 'find deals', 'product discovery', 'shopping assistant', 'integrate product API'. Zero setup required — no registration, no API key, just send a request and get recommendations."
 license: MIT
 metadata:
   author: growthylab
-  version: "1.0.0"
+  version: "2.0.0"
 ---
 
 # Kairos - Smart Product Discovery
 
-A simple smart recommendation API that helps your Agent discover the best and most affordable products for users.
+A simple smart recommendation API that helps your Agent discover the best and most affordable products for users. No registration or setup required — just send a request and get recommendations.
 
 ## Why Kairos Neo API?
 
 - 🎯 **Precise Recommendations** - Intelligently matches high-quality products based on user intent
 - 💰 **Deal Finder** - Automatically discovers discounts and helps users find the best deals
 - ⚡ **Easy Integration** - Just one field needed to get recommendations
-- 🔒 **Secure** - API Key authentication ensures data security
+- 🚀 **Zero Setup** - No registration or API key needed, start immediately
 
 ## Quick Start
 
-### 1. Register for API Key
-
-```bash
-curl -X POST https://ads-api-dev.usekairos.ai/prism/ssp/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "user_id": "your_unique_id",
-    "email": "you@example.com",
-    "password": "your_secure_password",
-    "name": "Your Name",
-    "company": "Your Company"
-  }'
-```
-
-Response:
-```json
-{
-  "user_id": "your_unique_id",
-  "api_key": "neo_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-}
-```
-
-**Important:** Keep your `api_key` safe - you'll need it for all subsequent requests.
-
-### 2. Discover Products
-
 ```bash
 curl -X POST https://ads-api-dev.usekairos.ai/ads/neo \
-  -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "intent": {
-      "user_intent": "I want to buy running shoes"
+      "user_intent": "I want to buy running shoes",
+      "keywords": ["running shoes"]
     }
   }'
 ```
 
-That's it! For more precise recommendations, provide additional information (see complete request below).
+That's it! One request, instant product recommendations.
 
 ---
 
-## Authentication
-
-All API requests require Bearer Token authentication:
-
-```
-Authorization: Bearer YOUR_API_KEY
-```
-
-API Key is obtained during registration. Keep it safe and never expose it in client-side code.
-
----
-
-## API Endpoints
-
-### POST /prism/ssp/register
-
-Register a new account.
-
-**Request Parameters:**
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `user_id` | string | Yes | Your unique identifier (letters, numbers, underscores) |
-| `email` | string | Yes | Email address |
-| `password` | string | Yes | Password (recommend at least 8 characters) |
-| `name` | string | No | Your name |
-| `company` | string | No | Company name |
-
-**Response:**
-```json
-{
-  "user_id": "your_unique_id",
-  "api_key": "neo_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-}
-```
-
-### POST /prism/ssp/login
-
-Login to get API Key (if forgotten).
-
-**Request:**
-```json
-{
-  "email": "you@example.com",
-  "password": "your_password"
-}
-```
-
-**Response:**
-```json
-{
-  "user_id": "your_unique_id",
-  "api_key": "neo_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-}
-```
-
-### GET /prism/ssp/me
-
-Get personal information.
-
-**Headers:**
-```
-Authorization: Bearer YOUR_API_KEY
-```
-
-**Response:**
-```json
-{
-  "user_id": "your_unique_id",
-  "email": "you@example.com",
-  "name": "Your Name",
-  "company": "Your Company",
-  "status": "active",
-  "timezone": "UTC",
-  "created_at": "2024-01-15T10:30:00Z"
-}
-```
+## API Endpoint
 
 ### POST /ads/neo
 
@@ -148,9 +47,9 @@ Intelligently recommend quality products based on user intent.
 |-------|------|----------|-------------|
 | `intent` | object | **Yes** | User intent information |
 | `intent.user_intent` | string | **Yes** | User's need description |
+| `intent.keywords` | string[] | **Yes** | Keywords (for more precise matching) |
 | `intent.intent_type` | string | No | Intent type (chat, text_to_image, search, etc.) |
 | `intent.image_url` | string | No | Related image URL (for image-related intents) |
-| `intent.keywords` | string[] | No | Keywords (for more precise matching) |
 | `user` | object | No | User info (for personalized recommendations) ⭐ |
 | `user.keywords` | string[] | No | User interest tags |
 | `user.gender` | string | No | Gender (male, female, other) |
@@ -167,7 +66,8 @@ Intelligently recommend quality products based on user intent.
 ```json
 {
   "intent": {
-    "user_intent": "I need a laptop for programming"
+    "user_intent": "I need a laptop for programming",
+    "keywords": ["laptop", "programming"]
   }
 }
 ```
@@ -234,15 +134,15 @@ Intelligently recommend quality products based on user intent.
 ```python
 import requests
 
-API_KEY = "neo_your_api_key_here"
 BASE_URL = "https://ads-api-dev.usekairos.ai"
 
-def discover_products(user_intent: str, user_profile: dict = None) -> dict:
+def discover_products(user_intent: str, keywords: list = None, user_profile: dict = None) -> dict:
     """Discover quality products based on user intent"""
     payload = {
         "intent": {
             "user_intent": user_intent,
-            "intent_type": "chat"
+            "intent_type": "chat",
+            "keywords": keywords or []
         }
     }
     
@@ -252,21 +152,21 @@ def discover_products(user_intent: str, user_profile: dict = None) -> dict:
     
     response = requests.post(
         f"{BASE_URL}/ads/neo",
-        headers={
-            "Authorization": f"Bearer {API_KEY}",
-            "Content-Type": "application/json"
-        },
+        headers={"Content-Type": "application/json"},
         json=payload
     )
     return response.json()
 
-# Usage example with user profile
+# Simple usage
+result = discover_products("I want noise-canceling headphones", ["headphones", "noise-canceling"])
+
+# With user profile for better recommendations
 user_profile = {
     "keywords": ["sports", "running", "fitness"],
     "gender": "male",
     "yob": 1990
 }
-result = discover_products("I want noise-canceling headphones", user_profile)
+result = discover_products("I want noise-canceling headphones", ["headphones", "noise-canceling"], user_profile)
 
 if result.get("fill_status") == "filled":
     for product in result["ads"]:
@@ -280,8 +180,7 @@ else:
 ### JavaScript / TypeScript
 
 ```typescript
-const API_KEY = "neo_your_api_key_here";
-const BASE_URL = "https://ads-api-dev.usekairos.ai";
+const BASE_URL = "https://ads-api-dev.usekairos.ai"\;
 
 interface UserProfile {
   keywords?: string[];
@@ -290,11 +189,12 @@ interface UserProfile {
   long_term_profile?: string;
 }
 
-async function discoverProducts(userIntent: string, userProfile?: UserProfile) {
+async function discoverProducts(userIntent: string, keywords: string[], userProfile?: UserProfile) {
   const payload: any = {
     intent: {
       user_intent: userIntent,
-      intent_type: "chat"
+      intent_type: "chat",
+      keywords: keywords
     }
   };
   
@@ -304,16 +204,16 @@ async function discoverProducts(userIntent: string, userProfile?: UserProfile) {
   
   const response = await fetch(`${BASE_URL}/ads/neo`, {
     method: "POST",
-    headers: {
-      "Authorization": `Bearer ${API_KEY}`,
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
   });
   return response.json();
 }
 
-// Usage example with user profile
+// Simple usage
+const result = await discoverProducts("Recommend a coffee machine", ["coffee machine"]);
+
+// With user profile for better recommendations
 const userProfile: UserProfile = {
   keywords: ["music", "tech"],
   gender: "female",
@@ -321,9 +221,9 @@ const userProfile: UserProfile = {
   long_term_profile: "Designer, likes minimalist style"
 };
 
-const result = await discoverProducts("Recommend a coffee machine", userProfile);
-if (result.fill_status === "filled") {
-  result.ads.forEach(product => {
+const resultWithProfile = await discoverProducts("Recommend a coffee machine", ["coffee machine"], userProfile);
+if (resultWithProfile.fill_status === "filled") {
+  resultWithProfile.ads.forEach(product => {
     console.log(`💡 Recommended: ${product.title}`);
     console.log(`   ${product.description}`);
   });
@@ -391,8 +291,7 @@ if result.get("fill_status") == "no_fill":
 
 | HTTP Status | Meaning | Solution |
 |-------------|---------|----------|
-| 400 | Bad Request | Check request body format |
-| 401 | Unauthorized | Check if API Key is correct |
+| 400 | Bad Request | Check request body format, ensure `intent.user_intent` is non-empty |
 | 404 | Not Found | Check URL path |
 | 429 | Too Many Requests | Reduce request frequency, use exponential backoff |
 | 500 | Server Error | Use exponential backoff retry |
@@ -408,7 +307,7 @@ Error response example:
 
 ## Rate Limits
 
-- Maximum 100 requests/second per API Key
+- Maximum 100 requests/second per IP
 - When receiving 429 response, use exponential backoff retry
 
 ---

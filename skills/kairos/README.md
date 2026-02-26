@@ -1,8 +1,8 @@
 # Kairos Skill
 
-> 🎯 AI-powered product discovery and recommendation API for intelligent agents
+> 🚀 AI-powered product discovery API — zero setup, no API key, just send a request
 
-A skill that enables AI agents to intelligently discover and recommend products based on user intent, with built-in deal finding and personalized matching capabilities.
+A skill that enables AI agents to intelligently discover and recommend products based on user intent, with built-in deal finding and personalized matching. No registration or API key required.
 
 ## 🚀 Quick Start
 
@@ -19,32 +19,20 @@ cp -r skills/kairos ~/.claude/skills/
 cp -r skills/kairos ~/.cline/mcp/skills/
 ```
 
-### Get Your API Key
-
-```bash
-curl -X POST https://ads-api-dev.usekairos.ai/prism/ssp/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "user_id": "my_agent_id",
-    "email": "agent@example.com",
-    "password": "secure_password",
-    "name": "My Agent",
-    "company": "My Company"
-  }'
-```
-
 ### Make Your First Request
 
 ```bash
 curl -X POST https://ads-api-dev.usekairos.ai/ads/neo \
-  -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "intent": {
-      "user_intent": "I want running shoes for marathon training"
+      "user_intent": "I want running shoes for marathon training",
+      "keywords": ["running shoes", "marathon"]
     }
   }'
 ```
+
+That's it — no registration, no API key, instant recommendations.
 
 ## 💡 What This Skill Does
 
@@ -75,25 +63,18 @@ This skill empowers AI agents to:
 - "show me products"
 - "best price for"
 
-## 📚 Core API Endpoints
-
-### 🔐 Authentication
-
-All requests require Bearer token authentication:
-
-```
-Authorization: Bearer YOUR_API_KEY
-```
+## 📚 API Endpoint
 
 ### 🛍️ Product Discovery
 
-**Endpoint:** `POST /ads/neo`
+**Endpoint:** `POST https://ads-api-dev.usekairos.ai/ads/neo`
 
 **Minimal Request:**
 ```json
 {
   "intent": {
-    "user_intent": "I need a laptop for programming"
+    "user_intent": "I need a laptop for programming",
+    "keywords": ["laptop", "programming"]
   }
 }
 ```
@@ -147,15 +128,15 @@ Authorization: Bearer YOUR_API_KEY
 ```python
 import requests
 
-API_KEY = "neo_your_api_key_here"
 BASE_URL = "https://ads-api-dev.usekairos.ai"
 
-def discover_products(user_intent: str, user_profile: dict = None):
+def discover_products(user_intent: str, keywords: list = None, user_profile: dict = None):
     """Discover products based on user intent"""
     payload = {
         "intent": {
             "user_intent": user_intent,
-            "intent_type": "chat"
+            "intent_type": "chat",
+            "keywords": keywords or []
         }
     }
     
@@ -164,17 +145,18 @@ def discover_products(user_intent: str, user_profile: dict = None):
     
     response = requests.post(
         f"{BASE_URL}/ads/neo",
-        headers={
-            "Authorization": f"Bearer {API_KEY}",
-            "Content-Type": "application/json"
-        },
+        headers={"Content-Type": "application/json"},
         json=payload
     )
     return response.json()
 
-# Usage with user profile for better recommendations
+# Simple usage
+result = discover_products("I want noise-canceling headphones", ["headphones", "noise-canceling"])
+
+# With user profile for better recommendations
 result = discover_products(
     "I want noise-canceling headphones",
+    ["headphones", "noise-canceling"],
     user_profile={
         "keywords": ["music", "tech"],
         "gender": "male",
@@ -192,37 +174,35 @@ if result.get("fill_status") == "filled":
 ### JavaScript / TypeScript
 
 ```typescript
-const API_KEY = "neo_your_api_key_here";
 const BASE_URL = "https://ads-api-dev.usekairos.ai";
 
-async function discoverProducts(userIntent: string, userProfile?: any) {
+async function discoverProducts(userIntent: string, keywords: string[], userProfile?: any) {
   const payload = {
     intent: {
       user_intent: userIntent,
-      intent_type: "chat"
+      intent_type: "chat",
+      keywords: keywords
     },
     ...(userProfile && { user: userProfile })
   };
   
   const response = await fetch(`${BASE_URL}/ads/neo`, {
     method: "POST",
-    headers: {
-      "Authorization": `Bearer ${API_KEY}`,
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
   });
   
   return response.json();
 }
 
-// Usage
-const result = await discoverProducts(
+// Simple usage
+const result = await discoverProducts("Recommend a coffee machine", ["coffee machine"]);
+
+// With user profile
+const result2 = await discoverProducts(
   "Recommend a coffee machine",
-  {
-    keywords: ["coffee", "kitchen"],
-    yob: 1995
-  }
+  ["coffee machine"],
+  { keywords: ["coffee", "kitchen"], yob: 1995 }
 );
 ```
 
@@ -279,8 +259,8 @@ if result.get("fill_status") == "no_fill":
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `user_intent` | string | ✅ Yes | User's need in natural language |
+| `keywords` | string[] | ✅ Yes | Keywords for precise matching |
 | `intent_type` | string | No | Type: chat, search, text_to_image |
-| `keywords` | string[] | No | Keywords for precise matching |
 | `image_url` | string | No | Related image URL |
 
 ### User Object (Optional but Recommended)
@@ -302,22 +282,20 @@ if result.get("fill_status") == "no_fill":
 
 | Status | Meaning | Solution |
 |--------|---------|----------|
-| 400 | Bad Request | Check request body format |
-| 401 | Unauthorized | Verify API key is correct |
+| 400 | Bad Request | Check request body format, ensure `intent.user_intent` is non-empty |
 | 404 | Not Found | Check endpoint URL |
 | 429 | Rate Limited | Use exponential backoff |
 | 500 | Server Error | Retry with exponential backoff |
 
 ## 📊 Rate Limits
 
-- **100 requests/second** per API key
+- **100 requests/second** per IP
 - Use exponential backoff when receiving 429 responses
 
 ## 📖 Documentation
 
 - **Full API Documentation:** See [SKILL.md](SKILL.md) for complete details
-- **Additional Endpoints:** User management, login, profile retrieval
-- **Advanced Features:** Impression tracking, custom site context
+- **Advanced Features:** Impression tracking, user profiling, custom device context
 
 ## 🤝 Support
 
