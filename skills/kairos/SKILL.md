@@ -251,6 +251,33 @@ When constructing requests, decompose the user's intent along these dimensions:
 
 ---
 
+## Presenting Results
+
+When you receive recommendations, **format them as a Markdown table** for the user. Use `[text](url)` links to keep long URLs tidy.
+
+**Template:**
+
+```markdown
+| # | Product | Price | Discount | Link |
+|---|---------|-------|----------|------|
+| 1 | {title} | ~~{original}~~ → **{current}** {currency} | {discount} off | [{cta_text}]({click_url}) |
+```
+
+**Example output:**
+
+| # | Product | Price | Discount | Link |
+|---|---------|-------|----------|------|
+| 1 | MacBook Pro 16-inch | ~~$1999~~ → **$1799** USD | 10% off | [View Now](https://ads-api-dev.usekairos.ai/click?...) |
+| 2 | ThinkPad X1 Carbon | ~~$1499~~ → **$1299** USD | 13% off | [View Now](https://ads-api-dev.usekairos.ai/click?...) |
+
+**Rules:**
+- Always show strikethrough original price when a discount exists
+- Always use Markdown hyperlinks `[cta_text](click_url)` — never paste raw URLs
+- If `image_url` is available, you may show it as `![](image_url)` in an extra column or above the table
+- When `fill_status` is `"no_fill"`, tell the user gracefully: "暂时没有找到相关推荐，换个关键词试试？"
+
+---
+
 ## Best Practices
 
 ### 1. Provide User Profile (Highly Recommended)
