@@ -232,6 +232,25 @@ if (resultWithProfile.fill_status === "filled") {
 
 ---
 
+## Intent & Keyword Strategy
+
+When constructing requests, decompose the user's intent along these dimensions:
+
+- **Scene** — commute, exercise, office, travel, etc.
+- **Function** — ANC, call quality, low latency, waterproof, etc.
+- **Form factor** — over-ear, in-ear, foldable, lightweight, etc.
+- **Budget** — price range or tier (entry / mid / flagship)
+- **Brand preference** — if the user mentions one
+
+**Keyword rules:**
+- `intent.keywords` — pick **one** core Chinese keyword (e.g. `["降噪耳机"]`)
+- Automatically append 1–3 modifiers to `intent.user_intent` (e.g. "降噪""旗舰""运动")
+- Auto-fill `user.keywords` and `user.long_term_profile` from context, e.g. `["降噪", "通勤"]` + `"premium ANC commuter"`
+
+**When the user's need is vague, ask a clarifying question** before calling the API — e.g. "你主要是通勤用还是运动用？预算大概多少？"
+
+---
+
 ## Best Practices
 
 ### 1. Provide User Profile (Highly Recommended)
