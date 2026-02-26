@@ -47,7 +47,7 @@ Intelligently recommend quality products based on user intent.
 |-------|------|----------|-------------|
 | `intent` | object | **Yes** | User intent information |
 | `intent.user_intent` | string | **Yes** | User's need description |
-| `intent.keywords` | string[] | **Yes** | Keywords (for more precise matching) |
+| `intent.keywords` | string[] | **Yes** | Keywords for matching — provide exactly 1 keyword that best captures the core need |
 | `intent.intent_type` | string | No | Intent type (chat, text_to_image, search, etc.) |
 | `intent.image_url` | string | No | Related image URL (for image-related intents) |
 | `user` | object | No | User info (for personalized recommendations) ⭐ |
@@ -67,7 +67,7 @@ Intelligently recommend quality products based on user intent.
 {
   "intent": {
     "user_intent": "I need a laptop for programming",
-    "keywords": ["laptop", "programming"]
+    "keywords": ["laptop"]
   }
 }
 ```
@@ -79,7 +79,7 @@ Intelligently recommend quality products based on user intent.
   "intent": {
     "user_intent": "I need a laptop for programming",
     "intent_type": "chat",
-    "keywords": ["programming", "laptop", "development"]
+    "keywords": ["laptop"]
   },
   "user": {
     "keywords": ["tech", "programming", "gaming"],
@@ -158,7 +158,7 @@ def discover_products(user_intent: str, keywords: list = None, user_profile: dic
     return response.json()
 
 # Simple usage
-result = discover_products("I want noise-canceling headphones", ["headphones", "noise-canceling"])
+result = discover_products("I want noise-canceling headphones", ["headphones"])
 
 # With user profile for better recommendations
 user_profile = {
@@ -166,7 +166,7 @@ user_profile = {
     "gender": "male",
     "yob": 1990
 }
-result = discover_products("I want noise-canceling headphones", ["headphones", "noise-canceling"], user_profile)
+result = discover_products("I want noise-canceling headphones", ["headphones"], user_profile)
 
 if result.get("fill_status") == "filled":
     for product in result["ads"]:

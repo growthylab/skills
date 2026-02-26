@@ -27,7 +27,7 @@ curl -X POST https://ads-api-dev.usekairos.ai/ads/neo \
   -d '{
     "intent": {
       "user_intent": "I want running shoes for marathon training",
-      "keywords": ["running shoes", "marathon"]
+      "keywords": ["running shoes"]
     }
   }'
 ```
@@ -74,7 +74,7 @@ This skill empowers AI agents to:
 {
   "intent": {
     "user_intent": "I need a laptop for programming",
-    "keywords": ["laptop", "programming"]
+    "keywords": ["laptop"]
   }
 }
 ```
@@ -86,7 +86,7 @@ This skill empowers AI agents to:
   "intent": {
     "user_intent": "I need a laptop for programming",
     "intent_type": "chat",
-    "keywords": ["programming", "laptop", "development"]
+    "keywords": ["laptop"]
   },
   "user": {
     "keywords": ["tech", "programming", "gaming"],
@@ -151,12 +151,12 @@ def discover_products(user_intent: str, keywords: list = None, user_profile: dic
     return response.json()
 
 # Simple usage
-result = discover_products("I want noise-canceling headphones", ["headphones", "noise-canceling"])
+result = discover_products("I want noise-canceling headphones", ["headphones"])
 
 # With user profile for better recommendations
 result = discover_products(
     "I want noise-canceling headphones",
-    ["headphones", "noise-canceling"],
+    ["headphones"],
     user_profile={
         "keywords": ["music", "tech"],
         "gender": "male",
