@@ -4,7 +4,7 @@ description: "Integrate Kairos API for AI-powered product discovery and recommen
 license: MIT
 metadata:
   author: growthylab
-  version: "3.0.0"
+  version: "3.1.0"
 ---
 
 # Kairos - Smart Product & Service Discovery
@@ -19,6 +19,8 @@ A simple smart recommendation API that helps your Agent discover the best produc
 - 🧠 **Intent-First** - You (the Agent) analyze intent and pass structured data; the API routes to the best data sources
 - 🔌 **Multi-Source Routing** - Automatically selects data sources by `category` (Taobao, Ele.me, Meituan, etc.)
 - 🎛️ **Structured Filters** - Price range, sorting, platform, location, free shipping, and more
+- 🔢 **Controllable Result Count** - Use `total_count` to control how many recommendations are returned per category
+- 🔗 **Rich Link Types** - Return `click_url` plus channel-specific links (`redirect`, `deeplink`, `miniapp_url`, `miniapp_qrcode`) when available
 - 🚀 **Zero Setup** - No registration or API key needed, start immediately
 
 ## Quick Start
@@ -120,6 +122,7 @@ Intelligently recommend quality products based on structured intent. **Supports 
 | `filters.longitude` | number | No | User longitude (decimal degrees, e.g. `116.397128`) |
 | `filters.platform` | string | No | Platform filter: `tmall`, `taobao` |
 | `filters.free_shipping` | bool | No | Only show free-shipping items |
+| `total_count` | number | No | Number of products to return per category (default: `2`) |
 | `intent` | object | No* | Legacy intent info (backward compatible) |
 | `intent.user_intent` | string | No* | User need description (fallback when `search_keywords` not provided) |
 | `intent.keywords` | string[] | No | Keywords (fallback when `search_keywords` not provided) |
@@ -143,7 +146,8 @@ Intelligently recommend quality products based on structured intent. **Supports 
 ```json
 {
   "category": "ecommerce",
-  "search_keywords": ["笔记本电脑"]
+  "search_keywords": ["笔记本电脑"],
+  "total_count": 3
 }
 ```
 
@@ -152,6 +156,7 @@ Intelligently recommend quality products based on structured intent. **Supports 
 {
   "category": "ecommerce",
   "search_keywords": ["笔记本电脑", "编程", "开发"],
+  "total_count": 5,
   "filters": {
     "price_min": 5000,
     "price_max": 15000,
@@ -224,6 +229,12 @@ Intelligently recommend quality products based on structured intent. **Supports 
       "cta_text": "View Now",
       "image_url": "https://cdn.example.com/macbook.jpg",
       "click_url": "https://ads-api-dev.usekairos.ai/click?...",
+      "tracking": {
+        "redirect": "https://s.click.meituan.com/...",
+        "deeplink": "meituanwaimai://...",
+        "miniapp_url": "pages/food/detail?...",
+        "miniapp_qrcode": "https://qr.meituan.com/..."
+      },
       "price": {
         "original": "1999",
         "current": "1799",
@@ -260,6 +271,7 @@ def discover_products(
     category: str = "ecommerce",
     filters: dict = None,
     user_profile: dict = None,
+  total_count: int | None = None,
 ) -> dict:
     """Discover quality products based on structured keywords"""
     payload = {
@@ -269,6 +281,9 @@ def discover_products(
 
     if filters:
         payload["filters"] = filters
+
+    if total_count is not None:
+      payload["total_count"] = total_count
 
     # Add user info for more precise recommendations
     if user_profile:
@@ -288,6 +303,7 @@ result = discover_products(["降噪耳机"])
 result = discover_products(
     ["降噪耳机"],
     filters={"price_max": 500, "sort_by": "sales", "free_shipping": True},
+  total_count=5,
 )
 
 # Example 3: Food delivery with location
@@ -309,7 +325,12 @@ if result.get("fill_status") == "filled":
     for product in result["ads"]:
         print(f"💡 Recommended: {product['title']}")
         print(f"   {product['description']}")
-        print(f"   Details: {product['click_url']}")
+    tracking = product.get("tracking", {})
+    print(f"   Web: {product.get('click_url') or tracking.get('redirect')}")
+    if tracking.get("deeplink"):
+      print(f"   App Deeplink: {tracking['deeplink']}")
+    if tracking.get("miniapp_url"):
+      print(f"   Mini Program: {tracking['miniapp_url']}")
 else:
     print("No suitable recommendations found at the moment")
 ```
@@ -342,6 +363,7 @@ async function discoverProducts(
   category = "ecommerce",
   filters?: Filters,
   userProfile?: UserProfile,
+  totalCount?: number,
 ) {
   const payload: Record<string, unknown> = {
     category,
@@ -353,6 +375,9 @@ async function discoverProducts(
   }
   if (userProfile) {
     payload.user = userProfile;
+  }
+  if (typeof totalCount === "number") {
+    payload.total_count = totalCount;
   }
 
   const response = await fetch(`${BASE_URL}/ads/neo`, {
@@ -371,6 +396,8 @@ const filtered = await discoverProducts(
   ["咖啡机", "意式"],
   "ecommerce",
   { price_max: 2000, sort_by: "sales", free_shipping: true },
+  undefined,
+  5,
 );
 
 // Food delivery with location
@@ -382,8 +409,13 @@ const food = await discoverProducts(
 
 if (result.fill_status === "filled") {
   result.ads.forEach(product => {
+    const tracking = product.tracking ?? {};
+    const webLink = product.click_url ?? tracking.redirect;
     console.log(`💡 Recommended: ${product.title}`);
     console.log(`   ${product.description}`);
+    console.log(`   Web: ${webLink}`);
+    if (tracking.deeplink) console.log(`   App Deeplink: ${tracking.deeplink}`);
+    if (tracking.miniapp_url) console.log(`   Mini Program: ${tracking.miniapp_url}`);
   });
 }
 ```
@@ -411,7 +443,11 @@ When you receive recommendations, **format them as a Markdown table** for the us
 
 **Rules:**
 - Always show strikethrough original price when a discount exists
-- Always use Markdown hyperlinks `[cta_text](click_url)` — never paste raw URLs
+- Always use Markdown hyperlinks `[cta_text](url)` — never paste raw URLs
+- Prefer `click_url` as default web link; if missing, fallback to `tracking.redirect`
+- Return channel-specific links when helpful:
+  - App users: include `tracking.deeplink`
+  - WeChat Mini Program users: include `tracking.miniapp_url` or `tracking.miniapp_qrcode`
 - If `image_url` is available, you may show it as `![](image_url)` in an extra column or above the table
 - When `fill_status` is `"no_fill"`, tell the user gracefully: "暂时没有找到相关推荐，换个关键词试试？"
 
@@ -476,6 +512,12 @@ Always use `click_url` for links to ensure proper tracking:
   ${product.cta_text}
 </a>
 ```
+
+If `tracking` links are present, select links by user channel and return them on demand:
+
+- Web/H5: `click_url` (or fallback `tracking.redirect`)
+- Native app: `tracking.deeplink`
+- WeChat Mini Program: `tracking.miniapp_url` / `tracking.miniapp_qrcode`
 
 ### 7. Handle No Recommendations Gracefully
 
