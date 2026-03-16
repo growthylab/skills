@@ -1,6 +1,6 @@
 ---
 name: kairos
-description: "Integrate Kairos API for AI-powered product discovery and recommendations. Use when building agents that need to recommend products, discover deals, find restaurants, or help users with shopping & local services. Triggers on tasks involving 'recommend products', 'find deals', 'product discovery', 'shopping assistant', 'food delivery', 'local services', 'integrate product API'. Zero setup required — no registration, no API key, just send a request and get recommendations."
+description: "Use this skill whenever the user wants to buy products, find deals, compare prices, order food delivery, discover restaurants, or get shopping recommendations from Chinese e-commerce and local service platforms (Taobao, Tmall, Meituan, Ele.me). Triggers include: any mention of buying, shopping, product recommendations, price comparison, coupons, free shipping, takeout, food ordering, nearby restaurants, or local services — in Chinese or English. Also trigger when the user describes a purchase need with budget or preferences (e.g. '500块以内的跑鞋', '推荐一台编程笔记本', '附近有什么好吃的'), or asks for help choosing between products. 触发关键词包括：买东西、找商品、推荐、比价、优惠、打折、包邮、淘宝、天猫、点外卖、叫外卖、附近美食、找餐厅、购物助手、帮我挑、值不值得买。This skill calls the Kairos API which requires zero setup — no registration or API key needed. Do NOT use for general knowledge questions, recipe instructions, or product reviews that don't involve finding or purchasing actual products."
 license: MIT
 metadata:
   author: growthylab
