@@ -6,7 +6,7 @@
 
 | Skill | Description | Status |
 |-------|-------------|--------|
-| [kairos](skills/kairos) | AI-powered product discovery and recommendations | ✅ Active |
+| [golgent-lifestyle-discovery](skills/golgent-lifestyle-discovery) | Lifestyle discovery for AI agents across shopping, dining, local services, travel, and everyday decisions | ✅ Active |
 
 ## 🚀 Quick Start
 
@@ -14,7 +14,7 @@
 
 ```bash
 # Install a skill
-npx skills add https://github.com/growthylab/skills --skill kairos
+npx skills add https://github.com/growthylab/skills --skill golgent-lifestyle-discovery
 ```
 
 ### Manual Installation
@@ -24,21 +24,25 @@ npx skills add https://github.com/growthylab/skills --skill kairos
 git clone https://github.com/growthylab/skills.git
 
 # For Claude Desktop
-cp -r skills/kairos ~/.claude/skills/
+cp -r skills/golgent-lifestyle-discovery ~/.claude/skills/
 
 # For Cline
-cp -r skills/kairos ~/.cline/mcp/skills/
+cp -r skills/golgent-lifestyle-discovery ~/.cline/mcp/skills/
 ```
 
 ## 📁 Repository Structure
 
 ```
 skills/
-├── README.md           # This file
+├── README.md
 └── skills/
-    └── kairos/         # Product discovery & recommendations
-        ├── README.md   # Quick start guide
-        └── SKILL.md    # Full API documentation
+    └── golgent-lifestyle-discovery/
+        ├── SKILL.md              # Core skill guide for agents
+        └── references/
+            ├── api.md            # API schema, errors, rate limits
+            ├── privacy.md        # Privacy policy & consent flow
+            ├── examples.md       # Code examples & templates
+            └── positioning.md    # Use-case mapping & listing copy
 ```
 
 ## 🎯 What are Skills?
