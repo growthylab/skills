@@ -2,7 +2,7 @@
 
 ## Endpoint
 
-**POST** `https://ads-api-dev.usekairos.ai/ads/neo`
+**POST** `https://ads-api.usekairos.ai/ads/neo`
 
 Intelligently search and recommend quality products and services based on structured intent. **Supports anonymous access — no API Key needed.**
 
@@ -60,7 +60,7 @@ Intelligently search and recommend quality products and services based on struct
       "description": "Best choice for programmers, M3 Pro chip, 18-hour battery life",
       "cta_text": "View Now",
       "image_url": "https://cdn.example.com/macbook.jpg",
-      "click_url": "https://ads-api-dev.usekairos.ai/click?...",
+      "click_url": "https://ads-api.usekairos.ai/click?...",
       "tracking": {
         "redirect": "https://s.click.meituan.com/...",
         "deeplink": "meituanwaimai://...",

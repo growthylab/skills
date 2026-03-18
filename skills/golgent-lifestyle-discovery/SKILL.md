@@ -22,7 +22,7 @@ Help users discover lifestyle options that match their intent — from shopping 
 3. **Ask for location only when the scenario requires it.** `food_delivery` needs precise location; `ecommerce` does not.
 4. **Ask for consent before sending optional profile data.** Follow the consent flow in `references/privacy.md`.
 5. **Build structured keywords and filters.** Extract 1–3 Chinese keywords + price/sort/platform filters.
-6. **Call the API.** `POST https://ads-api-dev.usekairos.ai/ads/neo` — see `references/api.md` for full schema.
+6. **Call the API.** `POST https://ads-api.usekairos.ai/ads/neo` — see `references/api.md` for full schema.
 7. **Present results as concise, actionable options.** Use the formatting rules below.
 
 ## Category guidance
@@ -35,7 +35,7 @@ Help users discover lifestyle options that match their intent — from shopping 
 
 ## API quick reference
 
-**Endpoint:** `POST https://ads-api-dev.usekairos.ai/ads/neo`
+**Endpoint:** `POST https://ads-api.usekairos.ai/ads/neo`
 
 **Minimal request:**
 
