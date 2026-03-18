@@ -5,7 +5,7 @@
 ### Structured keywords (recommended)
 
 ```bash
-curl -X POST https://ads-api-dev.usekairos.ai/ads/neo \
+curl -X POST https://ads-api.usekairos.ai/ads/neo \
   -H "Content-Type: application/json" \
   -d '{
     "category": "ecommerce",
@@ -20,7 +20,7 @@ curl -X POST https://ads-api-dev.usekairos.ai/ads/neo \
 ### Food delivery with location
 
 ```bash
-curl -X POST https://ads-api-dev.usekairos.ai/ads/neo \
+curl -X POST https://ads-api.usekairos.ai/ads/neo \
   -H "Content-Type: application/json" \
   -d '{
     "category": "food_delivery",
@@ -105,7 +105,7 @@ curl -X POST https://ads-api-dev.usekairos.ai/ads/neo \
 ```python
 import requests
 
-BASE_URL = "https://ads-api-dev.usekairos.ai"
+BASE_URL = "https://ads-api.usekairos.ai"
 
 def discover(
     keywords: list[str],
@@ -181,7 +181,7 @@ else:
 ## JavaScript / TypeScript Example
 
 ```typescript
-const BASE_URL = "https://ads-api-dev.usekairos.ai";
+const BASE_URL = "https://ads-api.usekairos.ai";
 
 interface Filters {
   price_min?: number;
@@ -283,8 +283,8 @@ if (shoes.fill_status === "filled") {
 
 | # | Recommendation | Price | Discount | Link |
 |---|---------------|-------|----------|------|
-| 1 | MacBook Pro 16-inch | ~~$1999~~ → **$1799** USD | 10% off | [View Now](https://ads-api-dev.usekairos.ai/click?...) |
-| 2 | ThinkPad X1 Carbon | ~~$1499~~ → **$1299** USD | 13% off | [View Now](https://ads-api-dev.usekairos.ai/click?...) |
+| 1 | MacBook Pro 16-inch | ~~$1999~~ → **$1799** USD | 10% off | [View Now](https://ads-api.usekairos.ai/click?...) |
+| 2 | ThinkPad X1 Carbon | ~~$1499~~ → **$1299** USD | 13% off | [View Now](https://ads-api.usekairos.ai/click?...) |
 
 **Formatting rules:**
 
